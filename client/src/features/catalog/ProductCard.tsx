@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 import { Product } from "../../app/models/product";
+import { Link } from "react-router-dom";
 
 type Props = {
   product: Product;
@@ -44,7 +45,9 @@ const ProductCard = ({ product }: Props) => {
       </CardContent>
       <CardActions>
         <Button size="small">Add To Card</Button>
-        <Button size="small">View</Button>
+        <Button component={Link} to={`/catalog/${product.id}`} size="small">
+          View
+        </Button>
       </CardActions>
     </Card>
   );
