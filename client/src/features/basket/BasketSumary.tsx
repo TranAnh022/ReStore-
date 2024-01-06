@@ -7,11 +7,11 @@ import {
   TableCell,
   Typography,
 } from "@mui/material";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { currencyFormat } from "../../app/utils/util";
+import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketSummary() {
-  const { basket } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
 
   if (!basket) {
     return <Typography variant="h3">Your basket is empty</Typography>;
