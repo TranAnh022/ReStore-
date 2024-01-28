@@ -5,24 +5,24 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Typography,
 } from "@mui/material";
-import { currencyFormat } from "../../app/utils/util";
+
 import { useAppSelector } from "../../app/store/configureStore";
+import { currencyFormat } from "../../app/utils/util";
 
-export default function BasketSummary() {
+interface Props {
+  subtotal?: number;
+}
+
+export default function BasketSummary({ subtotal }: Props) {
   const { basket } = useAppSelector((state) => state.basket);
-
-  if (!basket) {
-    return <Typography variant="h3">Your basket is empty</Typography>;
-  }
-
-  const subtotal = basket.items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  const deliveryFee = subtotal / 100 > 100 ? 0 : 5;
+  if (subtotal === undefined)
+    subtotal =
+      basket?.items.reduce(
+        (sum, item) => sum + item.quantity * item.price,
+        0
+      ) ?? 0;
+  const deliveryFee = subtotal > 10000 ? 0 : 500;
 
   return (
     <>
@@ -35,15 +35,13 @@ export default function BasketSummary() {
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>Delivery fee*</TableCell>
-              <TableCell align="right">${deliveryFee}</TableCell>
+              <TableCell align="right">{currencyFormat(deliveryFee)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              {subtotal && (
-                <TableCell align="right">
-                  {currencyFormat(subtotal + deliveryFee)}
-                </TableCell>
-              )}
+              <TableCell align="right">
+                {currencyFormat(subtotal + deliveryFee)}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>

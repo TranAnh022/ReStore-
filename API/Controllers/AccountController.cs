@@ -38,7 +38,7 @@ namespace API.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized();
 
-            var userBasket = await RetrievedBasket(loginDto.UserName) ;
+            var userBasket = await RetrievedBasket(loginDto.UserName);
             var anonBasket = await RetrievedBasket(Request.Cookies["buyerId"]);
 
             if (anonBasket != null)
@@ -93,9 +93,18 @@ namespace API.Controllers
                 Basket = userBasket?.MapBasketToDto()
             };
         }
-        
 
-        private async Task<Basket>  RetrievedBasket(string buyerId)
+        [Authorize]
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress>> GetSaveAddress()
+        {
+            var address = await _userManager.Users.Where(x => x.UserName == User.Identity.Name).Select(user => user.Address).FirstOrDefaultAsync();
+            Console.WriteLine(address);
+            return address;
+        }
+
+
+        private async Task<Basket> RetrievedBasket(string buyerId)
         {
             if (string.IsNullOrEmpty(buyerId))
             {
